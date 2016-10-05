@@ -8,7 +8,7 @@ export PATH
 #   Intro:  http://koolshare.cn/forum-72-1.html
 #===============================================================================================
 program_name="frps"
-version="1.0"
+version="1.1"
 str_program_dir="/usr/local/${program_name}"
 program_releases="https://api.github.com/repos/fatedier/frp/releases"
 program_api_filename="/tmp/${program_name}_api_file.txt"
@@ -16,7 +16,6 @@ program_init="/etc/init.d/${program_name}"
 program_config_file="frps.ini"
 program_init_download_url=https://raw.githubusercontent.com/clangcn/onekey-install-shell/master/frps/frps.init
 str_install_shell=https://raw.githubusercontent.com/clangcn/onekey-install-shell/master/frps/install-frps.sh
-RET_VAL=0
 
 function fun_clang.cn(){
     echo ""
@@ -44,7 +43,7 @@ function rootness(){
     if [[ $EUID -ne 0 ]]; then
         fun_clang.cn
         echo "Error:This script must be run as root!" 1>&2
-        return 1
+        exit 1
     fi
 }
 function get_char(){
@@ -66,7 +65,7 @@ function checkos(){
         OS=Ubuntu
     else
         echo "Not support OS, Please reinstall OS and retry!"
-        return 1
+        exit 1
     fi
 }
 # Get version
@@ -102,7 +101,7 @@ function check_os_bit(){
 function check_centosversion(){
 if centosversion 5; then
     echo "Not support CentOS 5.x, please change to CentOS 6,7 or Debian or Ubuntu and try again."
-    return 1
+    exit 1
 fi
 }
 # Disable selinux
@@ -163,15 +162,20 @@ function fun_download_file(){
     if [ ! -s ${str_program_dir}/${program_name} ]; then
         rm -fr ${program_latest_filename} frp_${program_version:1}_linux_${ARCHS}
         if ! wget --no-check-certificate -q ${program_latest_file_url} -O ${program_latest_filename}; then
-            echo " failed"
-            return 1
+            echo -e " ${COLOR_RED}failed${COLOR_END}"
+            exit 1
         fi
         tar xzf ${program_latest_filename}
         mv frp_${program_version:1}_linux_${ARCHS}/frps ${str_program_dir}/${program_name}
         rm -fr ${program_latest_filename} frp_${program_version:1}_linux_${ARCHS}
     fi
     chown root:root -R ${str_program_dir}
-    [ ! -x ${str_program_dir}/${program_name} ] && chmod 755 ${str_program_dir}/${program_name}
+    if [ -s ${str_program_dir}/${program_name} ]; then
+        [ ! -x ${str_program_dir}/${program_name} ] && chmod 755 ${str_program_dir}/${program_name}
+    else
+        echo -e " ${COLOR_RED}failed${COLOR_END}"
+        exit 1
+    fi
 }
 # Check port
 function fun_check_port(){
@@ -325,7 +329,7 @@ function pre_install_clang(){
                 str_log_level="debug"
                 ;;
             [eE][xX][iI][tT])
-                return 1
+                exit 1
                 ;;
             *)
                 str_log_level="info"
@@ -352,7 +356,7 @@ function pre_install_clang(){
                 str_log_file_flag="disable"
                 ;;
             [eE][xX][iI][tT])
-                return 1
+                exit 1
                 ;;
             *)
                 str_log_file="./frps.log"
@@ -425,8 +429,8 @@ EOF
     echo -n "download ${program_init}..."
     if [ ! -s ${program_init} ]; then
         if ! wget --no-check-certificate -q ${program_init_download_url} -O ${program_init}; then
-            echo " failed"
-            return 1
+            echo -e " ${COLOR_RED}failed${COLOR_END}"
+            exit 1
         fi
     fi
     [ ! -x ${program_init} ] && chmod +x ${program_init}
@@ -468,7 +472,7 @@ EOF
     echo -e "  start: ${COLOR_PINK}${program_name}${COLOR_END} ${COLOR_GREEN}start${COLOR_END}"
     echo -e "   stop: ${COLOR_PINK}${program_name}${COLOR_END} ${COLOR_GREEN}stop${COLOR_END}"
     echo -e "restart: ${COLOR_PINK}${program_name}${COLOR_END} ${COLOR_GREEN}restart${COLOR_END}"
-    return 0
+    exit 0
 }
 ############################### configure function ##################################
 function configure_program_server_clang(){
@@ -476,7 +480,7 @@ function configure_program_server_clang(){
         vi ${str_program_dir}/${program_config_file}
     else
         echo "${program_name} configuration file not found!"
-        return 1
+        exit 1
     fi
 }
 ############################### uninstall function ##################################
@@ -500,7 +504,6 @@ function uninstall_program_server_clang(){
         esac
         if [ "${str_uninstall}" == 'n' ]; then
             echo "You select [No],shell exit!"
-            return 0
         else
             checkos
             ${program_init} stop
@@ -512,12 +515,11 @@ function uninstall_program_server_clang(){
             rm -f ${program_init} /var/run/${program_name}.pid /usr/bin/${program_name}
             rm -fr ${str_program_dir}
             echo "${program_name} uninstall success!"
-            return 0
         fi
     else
         echo "${program_name} Not install!"
-        return 0
     fi
+    exit 0
 }
 ############################### update function ##################################
 function update_program_server_clang(){
@@ -537,7 +539,7 @@ function update_program_server_clang(){
                 echo "========== Update ${program_name} ${program_init} =========="
                 if ! wget --no-check-certificate ${program_init_download_url} -O ${program_init}; then
                     echo "Failed to download ${program_name}.init file!"
-                    return 1
+                    exit 1
                 else
                     echo -e "${COLOR_GREEN}${program_init} Update successfully !!!${COLOR_END}"
                     update_flag="true"
@@ -547,7 +549,7 @@ function update_program_server_clang(){
                 echo "========== Update ${program_name} install-${program_name}.sh =========="
                 if ! wget --no-check-certificate ${str_install_shell} -O ${install_shell}/$0; then
                     echo "Failed to download $0 file!"
-                    return 1
+                    exit 1
                 else
                     echo -e "${COLOR_GREEN}$0 Update successfully !!!${COLOR_END}"
                     update_flag="true"
@@ -558,7 +560,7 @@ function update_program_server_clang(){
                 echo ""
                 echo -e "${COLOR_GREEN}Please Re-run${COLOR_END} ${COLOR_PINKBACK_WHITEFONT}$0 update${COLOR_END}"
                 echo ""
-                return 1
+                exit 1
             fi
         fi
         if [ "${update_flag}" == 'false' ]; then
@@ -593,7 +595,7 @@ function update_program_server_clang(){
     else
         echo "${program_name} Not install!"
     fi
-    return 0
+    exit 0
 }
 clear
 strPath=`pwd`
@@ -622,4 +624,3 @@ update)
     RET_VAL=1
     ;;
 esac
-exit $RET_VAL
