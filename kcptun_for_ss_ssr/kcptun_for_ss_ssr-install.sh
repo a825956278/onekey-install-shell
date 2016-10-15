@@ -7,7 +7,7 @@ export PATH
 #   Author: Clang
 #   Intro:  http://koolshare.cn/forum-72-1.html
 #===============================================================================================
-version="1.1"
+version="1.2"
 shell_download_link="https://raw.githubusercontent.com/clangcn/onekey-install-shell/master/kcptun_for_ss_ssr/kcptun_for_ss_ssr-install.sh"
 ss_libev_config="/etc/shadowsocks-libev/config.json"
 ssr_config="/usr/local/shadowsocksR/shadowsocksR.json"
@@ -759,7 +759,7 @@ show_kcptun_for_ss_ssr(){
         echo -e "Kcptun MTU                : ${COLOR_GREEN}${set_kcptun_mtu}${COLOR_END}"
         echo -e "Kcptun sndwnd             : ${COLOR_GREEN}1024${COLOR_END}"
         echo -e "Kcptun rcvwnd             : ${COLOR_GREEN}1024${COLOR_END}"
-        echo -e "Kcptun compression        : ${COLOR_GREEN}${set_kcptun_nocomp}${COLOR_END}"
+        echo -e "Kcptun compression        : ${COLOR_GREEN}${set_kcptun_compression}${COLOR_END}"
         echo "----------------------------------------------------------"
         echo -e "${COLOR_PINK}Kcptun config for SS/SSR/Phone:${COLOR_END}"
         echo -e "KCP Port      : ${COLOR_GREEN}${set_kcptun_port}${COLOR_END}"
