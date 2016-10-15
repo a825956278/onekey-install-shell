@@ -29,7 +29,7 @@ LOGFILE=/var/log/${NAME}.log
 SCRIPTNAME=/etc/init.d/${NAME}
 PID_DIR=/var/run
 PID_FILE=${PID_DIR}/${ProgramName}.pid
-version="1.0"
+version="1.1"
 RET_VAL=0
 
 [ -x ${BIN} ] || exit 0
@@ -66,7 +66,7 @@ fun_start()
         mkdir -p ${PID_DIR} || echo "failed creating PID directory ${PID_DIR}"; exit 1
     fi
     if fun_check_run; then
-        echo "${ProgramName} (pid $(pidof ${BIN})) already running."
+        echo "${ProgramName} (pid $PID) already running."
         return 0
     fi
     if [[ "${log_flag}" =~ ^[Ll][Oo][Gg]$ ]]; then
@@ -76,8 +76,6 @@ fun_start()
     fi
     echo -n "Starting ${ProgramName}..."
     ${BIN} -c ${CONFIGFILE} > ${strLog} 2>&1 &
-    PID=$(pidof ${BIN})
-    echo $PID > $PID_FILE
     sleep 0.3
     if ! fun_check_run; then
         echo "start failed"
@@ -85,7 +83,7 @@ fun_start()
     fi
     echo " done"
     ${BIN} -v
-    echo "${ProgramName} (pid $(pidof ${BIN}))is running."
+    echo "${ProgramName} (pid $PID)is running."
     if [[ "${log_flag}" =~ ^[Ll][Oo][Gg]$ ]]; then
         echo "read ${LOGFILE} for log" 
     fi
@@ -97,8 +95,8 @@ fun_stop(){
       fun_clangcn
     fi
     if fun_check_run; then
-        echo -n "Stoping ${ProgramName} (pid $(pidof ${BIN}))... "
-        kill $(pidof ${BIN})
+        echo -n "Stoping ${ProgramName} (pid $PID)... "
+        kill $PID
         if [ "$?" != 0 ] ; then
             echo " failed"
             exit 1
@@ -122,7 +120,7 @@ fun_restart(){
 fun_status(){
     PID=`ps -ef | grep -v grep | grep -i "${BIN}" | awk '{print $2}'`
     if [ ! -z $PID ]; then
-        echo "${ProgramName} (pid $(pidof ${BIN})) is running..."
+        echo "${ProgramName} (pid $PID) is running..."
     else
         echo "${ProgramName} is stopped"
         exit 0
