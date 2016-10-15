@@ -7,7 +7,7 @@ export PATH
 #   Author: Clang
 #   Intro:  http://koolshare.cn/forum-72-1.html
 #===============================================================================================
-version="1.2"
+version="1.3"
 shell_download_link="https://raw.githubusercontent.com/clangcn/onekey-install-shell/master/kcptun_for_ss_ssr/kcptun_for_ss_ssr-install.sh"
 ss_libev_config="/etc/shadowsocks-libev/config.json"
 ssr_config="/usr/local/shadowsocksR/shadowsocksR.json"
@@ -1162,10 +1162,10 @@ pre_install_kcptun_for_ss_ssr(){
                 echo "Input error, please input correct number"
             fi
         done
-        if [ ! -z ${ss_libev_local_port} ]; then
-            kcptun_target_port="${ss_libev_local_port}"
-        elif [ ! -z ${ssr_local_port} ]; then
-            kcptun_target_port="${ssr_local_port}"
+        if [ ! -z ${set_ss_libev_port} ]; then
+            kcptun_target_port="${set_ss_libev_port}"
+        elif [ ! -z ${set_ssr_port} ]; then
+            kcptun_target_port="${set_ssr_port}"
         else
             while true
             do
