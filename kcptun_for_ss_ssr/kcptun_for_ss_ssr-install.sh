@@ -7,7 +7,7 @@ export PATH
 #   Author: Clang
 #   Intro:  http://koolshare.cn/forum-72-1.html
 #===============================================================================================
-version="1.0"
+version="1.1"
 shell_download_link="https://raw.githubusercontent.com/clangcn/onekey-install-shell/master/kcptun_for_ss_ssr/kcptun_for_ss_ssr-install.sh"
 ss_libev_config="/etc/shadowsocks-libev/config.json"
 ssr_config="/usr/local/shadowsocksR/shadowsocksR.json"
@@ -1251,7 +1251,7 @@ pre_install_kcptun_for_ss_ssr(){
         echo "---------------------------------------"
         echo
         def_kcptun_mode="fast2"
-        echo -e "Please select method for kcptun"
+        echo -e "Please select fast mode for kcptun"
         echo "1: fast"
         echo "2: fast2 (default)"
         echo "3: fast3"
