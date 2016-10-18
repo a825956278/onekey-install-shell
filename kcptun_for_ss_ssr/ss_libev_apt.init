@@ -21,7 +21,7 @@ NAME=Shadowsocks-libev
 CONF=/etc/shadowsocks-libev/config.json
 PID_DIR=/var/run
 PID_FILE=$PID_DIR/shadowsocks-libev.pid
-version="1.0"
+version="1.1"
 RET_VAL=0
 
 [ -x $DAEMON ] || exit 0
@@ -71,7 +71,7 @@ do_start() {
         echo "$NAME (pid $PID) is already running..."
         return 0
     fi
-    ${DAEMON} -c $CONF -u -A -f $PID_FILE
+    ${DAEMON} -c $CONF -u -f $PID_FILE
     if check_running; then
         echo "Starting $NAME success"
     else

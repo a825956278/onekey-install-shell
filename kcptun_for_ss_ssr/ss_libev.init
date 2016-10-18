@@ -30,7 +30,7 @@ NAME=Shadowsocks-libev
 CONF=/etc/shadowsocks-libev/config.json
 PID_DIR=/var/run
 PID_FILE=$PID_DIR/shadowsocks-libev.pid
-version="1.0"
+version="1.1"
 RET_VAL=0
 
 [ -x $DAEMON ] || exit 0
@@ -70,9 +70,9 @@ do_start() {
     else
         echo -n $"Starting ${NAME}: "
         if [ -f /etc/rc.d/init.d/functions ]; then
-            daemon $DAEMON -c $CONF -u -A -f $PID_FILE
+            daemon $DAEMON -c $CONF -u -f $PID_FILE
         else
-            $DAEMON -c $CONF -u -A -f $PID_FILE
+            $DAEMON -c $CONF -u -f $PID_FILE
         fi
     fi
     RETVAL=$?
