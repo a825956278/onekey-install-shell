@@ -8,7 +8,7 @@ export PATH
 #   Intro:  http://koolshare.cn/forum-72-1.html
 #===============================================================================================
 program_name="frps"
-version="1.1"
+version="1.2"
 str_program_dir="/usr/local/${program_name}"
 program_releases="https://api.github.com/repos/fatedier/frp/releases"
 program_api_filename="/tmp/${program_name}_api_file.txt"
@@ -17,7 +17,7 @@ program_config_file="frps.ini"
 program_init_download_url=https://raw.githubusercontent.com/clangcn/onekey-install-shell/master/frps/frps.init
 str_install_shell=https://raw.githubusercontent.com/clangcn/onekey-install-shell/master/frps/install-frps.sh
 
-function fun_clang.cn(){
+function fun_clangcn(){
     echo ""
     echo "+---------------------------------------------------------+"
     echo "|        frps for Linux Server, Written by Clang          |"
@@ -41,7 +41,7 @@ function fun_set_text_color(){
 # Check if user is root
 function rootness(){
     if [[ $EUID -ne 0 ]]; then
-        fun_clang.cn
+        fun_clangcn
         echo "Error:This script must be run as root!" 1>&2
         exit 1
     fi
@@ -266,7 +266,7 @@ function fun_input_max_pool_count(){
     fun_check_number "max_pool_count" "${def_max_pool}" "${input_max_pool_count}"
 }
 function pre_install_clang(){
-    fun_clang.cn
+    fun_clangcn
     echo -e "Check your server setting, please wait..."
     checkos
     check_centosversion
@@ -277,7 +277,7 @@ function pre_install_clang(){
     else
         check_net-tools
         clear
-        fun_clang.cn
+        fun_clangcn
         fun_getVer
         echo -e "Loading You Server IP, please wait..."
         defIP=$(wget -qO- ip.clang.cn | sed -r 's/\r//')
@@ -448,7 +448,7 @@ EOF
     echo " done"
     [ -s ${program_init} ] && ln -s ${program_init} /usr/bin/${program_name}
     ${program_init} start
-    fun_clang.cn
+    fun_clangcn
     #install successfully
     echo ""
     echo "Congratulations, ${program_name} install completed!"
@@ -485,7 +485,7 @@ function configure_program_server_clang(){
 }
 ############################### uninstall function ##################################
 function uninstall_program_server_clang(){
-    fun_clang.cn
+    fun_clangcn
     if [ -s ${program_init} ] || [ -s ${str_program_dir}/${program_name} ] ; then
         echo "============== Uninstall ${program_name} =============="
         str_uninstall="n"
@@ -523,7 +523,7 @@ function uninstall_program_server_clang(){
 }
 ############################### update function ##################################
 function update_program_server_clang(){
-    fun_clang.cn
+    fun_clangcn
     if [ -s ${program_init} ] || [ -s ${str_program_dir}/${program_name} ] ; then
         echo "============== Update ${program_name} =============="
         checkos
@@ -618,7 +618,7 @@ update)
     update_program_server_clang 2>&1 | tee /root/${program_name}-update.log
     ;;
 *)
-    fun_clang.cn
+    fun_clangcn
     echo "Arguments error! [${action} ]"
     echo "Usage: `basename $0` {install|uninstall|update|config}"
     RET_VAL=1
